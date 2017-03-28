@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  div.well
+    h1 Search for quotes that contain a word:
+    form(action='search' method='post')
+      table
+        tr
+          td
+            label zoekterm :
+          td
+            input(type='text' name='zoekterm' size=100)
+        tr
+          td
+          td(align='right')
+            input(type='Submit', value='Search')
+    br
+    br
+    a(href='/') Back to the main page!

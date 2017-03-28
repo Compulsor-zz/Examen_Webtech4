@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  div.well
+    h1 Quotes:
+    br
+    ul
+      each a in array
+        li: a
+    br
+    br
+    a(href='/') return to the main page

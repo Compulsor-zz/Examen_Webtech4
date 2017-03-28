@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  div.well
+    h1 Add new quote(s)
+    br
+    form(action='add' method='post')
+      table
+        tr
+          td
+            label Quote :
+          td
+            input(type='text' name='quote' size=100)
+        tr
+          td
+          td(align='right')
+            input(type='Submit', value='Save')
+    a(href='/') Back to the main page!
