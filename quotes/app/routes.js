@@ -25,22 +25,20 @@ module.exports = function(app) {
 
  // return new jade file with quote(s)
  app.post('/search', function(req, res) {
-
-	 var array = [];
+	 	var quotes;
 		 if(mongoose.connection.readyState != 1) {
 				 mongoose.connect(db.url);
 		 }
 
 		 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
-		 Quote.find({}, function(err, quotes) {
+		 Quote.find({"quotes": { $regex: req.body.zoekterm, $options: 'i' }}, function(err, quotes) {
 								if (err) {
 											throw err;
 								}
 
 									console.log(quotes);
-									console.log(array);
 							});
-				res.render('results');
+				res.render('results', {quotes: quotes});
  });
 
 	// Main page

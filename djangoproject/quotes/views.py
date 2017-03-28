@@ -1,22 +1,36 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import loader
-from django.views.decorators.csrf import csrf_exempt
 
+import string
 import redis
 import random
+
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
+def index(request):
 
-@route('/ask')
-def read_json(rdb):
-    nchoices = rdb.llen('answers')
-    answers = rdb.lrange('answers', 0, nchoices - 1)
-    return { 'answer': random.choice(answers) }
+  if request.method == 'POST':
+    try:
+        question = request.POST.get('question')
+        random_answer = r.srandmember('answers')
 
-@route('/answers', method='POST')
-def write_json(rdb):
-    rdb.delete('answers')
-    for answer in request.json['answers']:
-        rdb.lpush('answers', answer)
+        asked = False
 
-run(host='0.0.0.0', port=8080, debug=True, reloader=True)
+        responses = r.keys('response:*')
+        for response in responses:
+          response_value = r.hget(response, 'question')
+
+          if (response_value == question):
+            random_answer = r.hget(response, 'answer')
+            asked = True
+
+        r.sadd('responses', random_answer)
+        # The response will not be added if it already exists in the Rdb.
+
+        if(asked == False):
+          #Implementation required to save the question if it hasn't been asked yet
+          # + implementation required to save the answer as well in the Rdb
+
+          return render(request, 'quotes/index.html', {'answer': random_answer})
+    except Exception as ex:
+        return render(request, 'quotes/index.html', {'answer': "Bzzt.. My ... Batteries are ... low. Shut...Ting... doww....Nn."})
+  else:
+    return render(request, 'quotes/index.html', None)

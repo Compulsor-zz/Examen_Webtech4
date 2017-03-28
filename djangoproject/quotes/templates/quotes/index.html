@@ -1,0 +1,17 @@
+<html>
+<body>
+  <div class="container">
+    <h1>Magic 8-ball</h1>
+    <form action="{% url 'index' %}" method="POST">
+      {% csrf_token %}
+      <div class="magic8ball">
+        <label>Ask me a question!</label>
+        <input type='text' name='question'>
+      </div>
+      <br/>
+      <input type='submit' value='Ask me a question!' />
+      <h1>{{ answer }}</h1>
+    </form>
+  </div>
+</body>
+</html>
